@@ -1,52 +1,26 @@
-# Copyright 2015 IBM Corp. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import os
-from flask import Flask, jsonify
+from flask import Flask
+from flask import request
+from flask import render_template
 
 app = Flask(__name__)
 
 @app.route('/')
-def Welcome():
+def my_form():
     return app.send_static_file('form.html')
 
-@app.route('/myapp')
-def WelcomeToMyapp():
-    return 'Welcome again to my app running on Bluemix'
+@app.route('/output', methods=['POST'])
+def my_form_post():
+	num = int(request.form['number'])
+	ret_string = ''
+	
+	if num % 4 == 0:
+		ret_string = ret_string + 'IBM'
 
-@app.route('/output')
-def four_seven():
-    # put code here this is a change
-    form = web.input(name="Nobody", greet="Hello")
-    return 'hi'
-    greeting = "%s, %s" % (form.greet, form.name)
-    return greeting
-
-@app.route('/api/people')
-def GetPeople():
-    list = [
-        {'name': 'John', 'age': 28},
-        {'name': 'Bill', 'val': 26}
-    ]
-    return jsonify(results=list)
-
-@app.route('/api/people/<name>')
-def SayHello(name):
-    message = {
-        'message': 'Hello ' + name
-    }
-    return jsonify(results=message)
+	if num % 7 == 0:
+		ret_string = ret_string + ' Bluemix'
+	
+	return ret_string
 
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
